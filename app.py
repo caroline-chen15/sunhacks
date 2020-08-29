@@ -2,12 +2,16 @@
 
 from flask import Flask
 import folium
+import requests
+from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
 @app.route("/")
 
+
 def base():
+    
     map = folium.Map(location = [38.031572, -78.510631])
     
     folium.Marker(
@@ -15,6 +19,8 @@ def base():
         popup = "<b>Hacks of Kindness</b>\n Oct 3, 2020 \n ",
         tooltip = "Hacks of Kindness"
     ).add_to(map)
+
+    
 
     return map._repr_html_()
 
