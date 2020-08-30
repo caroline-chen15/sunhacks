@@ -4,11 +4,11 @@ from flask import Flask
 import folium
 import requests
 from bs4 import BeautifulSoup
+import scraper
 
 app = Flask(__name__)
 
 @app.route("/")
-
 
 def base():
     
@@ -20,7 +20,16 @@ def base():
         tooltip = "Hacks of Kindness"
     ).add_to(map)
 
-    
+    names, coords = scraper.manip()
+
+    count = 0
+    for i in coords:
+        folium.Marker(
+            location = [i[2], i[1]],
+            popup = names[count],
+            tooltip = names[count],
+        ).add_to(map)
+        count+=1
 
     return map._repr_html_()
 
