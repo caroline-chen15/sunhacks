@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 def base():
     
-    loc = "Hackathon Map"
+    loc = "2020-2021 Hackathon Map"
     title_html = '''
              <h3 align="center" style="font-size:16px"><b>{}</b></h3>
              '''.format(loc)
@@ -26,15 +26,17 @@ def base():
     #     tooltip = "Hacks of Kindness"
     # ).add_to(map)
 
-    names, coords = scraper.manip()
+    names, coords, dates, links = scraper.manip()
 
     count = 0
+
     for i in coords:
         #print(i)
         if i[0] != "":
+            txt = "<b>"+str(names[count])+"</b>" + "\n" + str(dates[count]) + "\n" + str(links[count])
             folium.Marker(
                 location = [i[2], i[1]],
-                popup = names[count],
+                popup = folium.Popup(txt, max_width='100%'),
                 tooltip = names[count],
             ).add_to(map)
         count+=1

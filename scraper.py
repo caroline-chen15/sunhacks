@@ -1,5 +1,6 @@
 #https://towardsdatascience.com/how-to-scrape-any-website-with-python-and-beautiful-soup-bc84e95a3483
 #https://www.crummy.com/software/BeautifulSoup/bs4/doc/#tag
+#https://stackoverflow.com/questions/39112138/use-selenium-to-click-a-load-more-button-until-it-doesnt-exist-youtube
 
 import requests
 from bs4 import BeautifulSoup
@@ -12,6 +13,7 @@ import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from numpy.compat import unicode
 
 
 driver = webdriver.Chrome(executable_path='C:\\Users\\cc\\Documents\\GitHub\\sunhacks\\chromedriver_win32\\chromedriver.exe')
@@ -39,10 +41,15 @@ driver.quit()
 soup = BeautifulSoup(page_source, features="html.parser")
 titles = soup.find_all('h2', attrs={'class':'title'})
 places = soup.find_all('p', attrs={'class':'challenge-location'})
+dates = soup.find_all('span', attrs={'class':'value date-range'})
+#links = soup.find_all('a', attrs={'data-role':'featured-challenge'})
 #print(titles)
 #print(places)
+#print(dates)
+links = []
 hacks = []
 locations = []
+times = []
 
 def manip():
     for i in titles:
@@ -51,7 +58,9 @@ def manip():
         str_pl = str(i)
         spliced = str_pl[69:-21]
         locations.append(spliced)
-
+    for i in dates:
+        str_dt = str(i)
+        times.append(str_dt[31:-7])
     locator = Nominatim(user_agent="myGeocoder")
     masterlist = []
     for i in locations:
@@ -64,5 +73,7 @@ def manip():
             listy.append(location.longitude)
             listy.append(location.latitude)
         masterlist.append(listy)
-
-    return hacks, masterlist
+    for link in soup.find_all('a'):
+        if "ref_content=default" in str(link):
+            links.append(link.get('href')[:-62])
+    return hacks, masterlist, times, links
