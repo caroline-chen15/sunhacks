@@ -10,10 +10,6 @@ from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
 import time
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from numpy.compat import unicode
 
 
 driver = webdriver.Chrome(executable_path='C:\\Users\\cc\\Documents\\GitHub\\sunhacks\\chromedriver_win32\\chromedriver.exe')
