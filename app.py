@@ -1,6 +1,7 @@
 #https://github.com/sudotechcode/create-map-with-flask
+#https://stackoverflow.com/questions/61928013/adding-a-title-or-text-to-a-folium-map
 
-from flask import Flask
+from flask import Flask, render_template
 import folium
 import requests
 from bs4 import BeautifulSoup
@@ -12,23 +13,30 @@ app = Flask(__name__)
 
 def base():
     
+    loc = "Hackathon Map"
+    title_html = '''
+             <h3 align="center" style="font-size:16px"><b>{}</b></h3>
+             '''.format(loc)
     map = folium.Map(location = [38.031572, -78.510631])
-    
-    folium.Marker(
-        location = [38.031572, -78.510631],
-        popup = "<b>Hacks of Kindness</b>\n Oct 3, 2020 \n ",
-        tooltip = "Hacks of Kindness"
-    ).add_to(map)
+    map.get_root().html.add_child(folium.Element(title_html))
+
+    # folium.Marker(
+    #     location = [38.031572, -78.510631],
+    #     popup = "<b>Hacks of Kindness</b>\n Oct 3, 2020 \n ",
+    #     tooltip = "Hacks of Kindness"
+    # ).add_to(map)
 
     names, coords = scraper.manip()
 
     count = 0
     for i in coords:
-        folium.Marker(
-            location = [i[2], i[1]],
-            popup = names[count],
-            tooltip = names[count],
-        ).add_to(map)
+        #print(i)
+        if i[0] != "":
+            folium.Marker(
+                location = [i[2], i[1]],
+                popup = names[count],
+                tooltip = names[count],
+            ).add_to(map)
         count+=1
 
     return map._repr_html_()
